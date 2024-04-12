@@ -1,12 +1,14 @@
-"""Example usage of pytraccar."""
-
+import os
 import asyncio
 import logging
-import os
-
 import aiohttp
-
 from pytraccar import ApiClient
+
+# Set the environment variables
+os.environ["TRACCAR_HOST"] = "localhost"
+os.environ["TRACCAR_PORT"] = "8082"
+os.environ["TRACCAR_USERNAME"] = "admin@gmail.com"
+os.environ["TRACCAR_PASSWORD"] = "admin"
 
 logging.basicConfig(
     level=logging.INFO,
@@ -35,6 +37,18 @@ async def test() -> None:
             os.environ.get("TRACCAR_PORT", 8082),
             server["version"],
         )
+
+        # Get a list of all devices
+        devices = await client.get_devices()
+
+        # Print device information
+        for device in devices:
+            print("Device ID:", device.get("id"))
+            print("Name:", device.get("name"))
+            print("Unique ID:", device.get("uniqueId"))
+            print("Status:", device.get("status"))
+            print("Position:", device.get("position"))
+            print("-----------------------------------------------------")
 
 
 asyncio.run(test())
